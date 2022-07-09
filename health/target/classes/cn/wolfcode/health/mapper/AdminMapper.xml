@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.health.mapper.AdminMapper" >
+  <resultMap id="BaseResultMap" type="cn.wolfcode.health.domain.Admin" >
+    <id column="admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="admin_name" property="adminName" jdbcType="VARCHAR" />
+    <result column="admin_password" property="adminPassword" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from admin
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.wolfcode.health.domain.Admin" >
+    insert into admin (admin_id, admin_name, admin_password
+      )
+    values (#{adminId,jdbcType=INTEGER}, #{adminName,jdbcType=VARCHAR}, #{adminPassword,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.wolfcode.health.domain.Admin" >
+    update admin
+    set admin_name = #{adminName,jdbcType=VARCHAR},
+      admin_password = #{adminPassword,jdbcType=VARCHAR}
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select admin_id, admin_name, admin_password
+    from admin
+    where admin_id = #{adminId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select admin_id, admin_name, admin_password
+    from admin
+  </select>
+    <select id="login" resultMap="BaseResultMap">
+      select * from admin where admin_name = #{adminName} and admin_password = #{adminPassword}
+    </select>
+</mapper>

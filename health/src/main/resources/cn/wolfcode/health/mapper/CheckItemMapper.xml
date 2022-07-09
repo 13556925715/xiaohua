@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.health.mapper.CheckItemMapper" >
+  <resultMap id="BaseResultMap" type="cn.wolfcode.health.domain.CheckItem" >
+    <id column="item_id" property="itemId" jdbcType="INTEGER" />
+    <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="item_sex" property="itemSex" jdbcType="CHAR" />
+    <result column="item_age" property="itemAge" jdbcType="VARCHAR" />
+    <result column="item_price" property="itemPrice" jdbcType="DOUBLE" />
+    <result column="item_type" property="itemType" jdbcType="CHAR" />
+    <result column="attention" property="attention" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from checkitem
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.wolfcode.health.domain.CheckItem" >
+    insert into checkitem (item_id, item_code, item_name, 
+      item_sex, item_age, item_price, 
+      item_type, attention, remark
+      )
+    values (#{itemId,jdbcType=INTEGER}, #{itemCode,jdbcType=VARCHAR}, #{itemName,jdbcType=VARCHAR}, 
+      #{itemSex,jdbcType=CHAR}, #{itemAge,jdbcType=VARCHAR}, #{itemPrice,jdbcType=DOUBLE}, 
+      #{itemType,jdbcType=CHAR}, #{attention,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.wolfcode.health.domain.CheckItem" >
+    update checkitem
+    set item_code = #{itemCode,jdbcType=VARCHAR},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      item_sex = #{itemSex,jdbcType=CHAR},
+      item_age = #{itemAge,jdbcType=VARCHAR},
+      item_price = #{itemPrice,jdbcType=DOUBLE},
+      item_type = #{itemType,jdbcType=CHAR},
+      attention = #{attention,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select item_id, item_code, item_name, item_sex, item_age, item_price, item_type, 
+    attention, remark
+    from checkitem
+    where item_id = #{itemId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select item_id, item_code, item_name, item_sex, item_age, item_price, item_type, 
+    attention, remark
+    from checkitem order by item_id desc
+  </select>
+  <select id="select" resultType="java.lang.Integer">
+    select count(*) from checkgroupitem where item_id = #{id}
+  </select>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.health.mapper.CheckGroupMapper" >
+  <resultMap id="BaseResultMap" type="cn.wolfcode.health.domain.CheckGroup" >
+    <id column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="helpcode" property="helpcode" jdbcType="VARCHAR" />
+    <result column="group_sex" property="groupSex" jdbcType="CHAR" />
+    <result column="attention" property="attention" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <!--映射拥有的检查项-->
+    <collection property="checkItems" ofType="CheckItem">
+      <result column="item_id" property="itemId"></result>
+      <result column="item_name" property="itemName"></result>
+    </collection>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from checkgroup
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteGroupItem">delete from checkgroupitem where group_id =#{id}</delete>
+    <!--
+    useGeneratedKeys:使用mysql生成的主键id
+    keyProperty:将生成的主键id设置给参数的哪个属性中
+    -->
+  <insert id="insert" parameterType="cn.wolfcode.health.domain.CheckGroup" useGeneratedKeys="true" keyProperty="groupId">
+    insert into checkgroup (group_id, group_code, group_name, 
+      helpcode, group_sex, attention, 
+      remark)
+    values (#{groupId,jdbcType=INTEGER}, #{groupCode,jdbcType=VARCHAR}, #{groupName,jdbcType=VARCHAR}, 
+      #{helpcode,jdbcType=VARCHAR}, #{groupSex,jdbcType=CHAR}, #{attention,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertGroupItem">
+    <!--添加检查组项-->
+    insert into checkgroupitem values(#{groupId},#{itemId})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.wolfcode.health.domain.CheckGroup" >
+    update checkgroup
+    set group_code = #{groupCode,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      helpcode = #{helpcode,jdbcType=VARCHAR},
+      group_sex = #{groupSex,jdbcType=CHAR},
+      attention = #{attention,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.wolfcode.health.qo.CheckGroupQo" >
+    select group_id, group_code, group_name, helpcode, group_sex, attention, remark
+    from checkgroup
+    <where>
+      <if test="keyword !=null and keyword != ''">
+        group_code like concat('%',#{keyword},'%') or
+        group_name like concat('%',#{keyword},'%') or
+        helpcode like concat('%',#{keyword},'%')
+      </if>
+    </where>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="cn.wolfcode.health.domain.CheckGroup" >
+    select group_id, group_code, group_name, helpcode, group_sex, attention, remark
+    from checkgroup
+  </select>
+  <select id="selectById" resultMap="BaseResultMap">
+    SELECT checkgroup.*,checkitem.item_id,checkitem.item_name FROM checkgroup
+    LEFT JOIN checkgroupitem ON checkgroup.group_id=checkgroupitem.group_id
+    LEFT JOIN checkitem ON checkgroupitem.item_id = checkitem.item_id
+    WHERE checkgroup.group_id=#{groupId}
+  </select>
+  <select id="select" resultType="java.lang.Integer">
+    select count(*) from setmeal_checkgroup where group_id = #{id}
+  </select>
+</mapper>
